@@ -1,6 +1,6 @@
 export const CarouselImages=[
     {
-        image:"https://shotkit.com/wp-content/uploads/2023/09/nicola-fittipaldi-XzG42Z5pjo0-unsplash.jpg",
+        image:"https://th.bing.com/th/id/OIP.6UxGx9HUhHRBkeiEel_8twHaLg?w=186&h=290&c=7&r=0&o=5&dpr=1.3&pid=1.7",
         path:""
     },
     {
