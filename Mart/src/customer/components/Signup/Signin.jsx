@@ -1,7 +1,8 @@
 import React from "react"
 import { useState , useEffect } from "react"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import Layout from "../Layout"
 
 export default function Signin() {
     const navigate = useNavigate()
@@ -17,14 +18,14 @@ export default function Signin() {
          e.preventDefault()
         console.log(data)
 
-         const response = axios.post('http://localhost:8080/api/user/createuser', data)
+         const response = axios.post('http://localhost:8080/api/user', data)
          
   
     }
 
 
     return (
-      <>
+      <Layout>
         
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -42,7 +43,7 @@ export default function Signin() {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                  Email address
+                  Email
                 </label>
                 <div className="mt-2">
                   <input
@@ -93,12 +94,12 @@ export default function Signin() {
   
             <p className="mt-10 text-center text-sm text-gray-500">
               Not a member?{' '}
-              <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              <Link to="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                 Click here to Signup
-              </a>
+              </Link>
             </p>
           </div>
         </div>
-      </>
+      </Layout>
     )
   }

@@ -1,5 +1,7 @@
+
 import React from "react";
 import HomeSectionCarousel from "./HomeSectionCarousel";
+import { Button } from "@mui/material";
 
 function HomeCard() {
 
@@ -17,7 +19,8 @@ function HomeCard() {
 
       <div className="p-7">
         <h3 className="text-lg font-medium text-grey-900">No Filter</h3>
-        <p>Men solid Round neck Tshirt</p>
+        <Button variant="outlined">Add to Cart</Button>
+        <p>Description</p>
       </div>
 
 
