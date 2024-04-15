@@ -3,6 +3,8 @@ import { useState } from 'react'
 import axios from 'axios'
 import {Link, useNavigate } from 'react-router-dom'
 import Layout from '../Layout'
+import {doCreateUserWithEmailPassword} from "../../../firebase/auth"
+import {useAuth} from "../../../contexts/authContext"
 
 
 function Signup() {
@@ -13,16 +15,20 @@ function Signup() {
         phone: ''
     })
 
+    const {userLoggedIn} = useAuth();
+
+    const [isSigningUp , setIsSigningUp] = useState(false)
+
     const navigate  = useNavigate()
 
    const handleSubmit =async(e) => {
 
     e.preventDefault()
 
-    window.confirm("Submit?") && 
-    await axios.post('http://localhost:8080/api/user' , data)
-    .then(()=>navigate('/'))
-    .catch(()=>alert("Not able to register"))
+    if(!isSigningUp){
+      setIsSigningUp(true);
+      await doCreateUserWithEmailPassword(data.email, data.password);
+    }
 
 
    }
