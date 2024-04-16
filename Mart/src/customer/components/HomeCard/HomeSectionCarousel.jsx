@@ -23,9 +23,11 @@ function HomeSectionCarousel() {
           responsive={responsive}
           infinite
         />
-        <Button variant ="contained" className="z-50" sx={{position: "absolute" , top: "8rem", right:"0rem", transform:""}} color="white" aria-label="next">
+        <button variant ="contained" className="z-50" sx={{position: "absolute" , top: "8rem", right:"0rem", transform:""}} color="white" aria-label="next">
           <ArrowLeftIcon sx={{transform:"rotate(90deg)"}}/>
-        </Button>
+        </button>
+
+        
         
       </div>
     </div>

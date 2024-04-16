@@ -1,15 +1,17 @@
 import React from 'react'
 import Layout from '../customer/components/Layout'
-import MainCarousel from '../customer/components/HomeCarousel/MainCarousel'
-import HomeSectionCarousel from '../customer/components/HomeCard/HomeSectionCarousel'
-import { Outlet } from 'react-router-dom'
+import ProductCard from './../customer/components/ProductCard/ProductCard';
 
 function Home() {
   return (
     <div >
-     <Layout>   
-      <HomeSectionCarousel/>
-    </Layout>
+     
+      <Layout>
+       <ProductCard/>
+       
+     </Layout>
+    
+    
     </div>
   )
 }
