@@ -10,27 +10,19 @@ import {getStorage} from "firebase/storage"
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBPL9VCL1gbzu7KkYde-xPMsvkDtDFU7no",
-  authDomain: "emart-36913.firebaseapp.com",
-  projectId: "emart-36913",
-  storageBucket: "emart-36913.appspot.com",
-  messagingSenderId: "472400247779",
-  appId: "1:472400247779:web:d56b101fbd8e955e813ed6",
-  measurementId: "G-Q90GEXTB0L"
+  apiKey: "AIzaSyD3nHTry7XnhAHlgQNN9jb51x4bShiPeLw",
+  authDomain: "mart-9f196.firebaseapp.com",
+  projectId: "mart-9f196",
+  storageBucket: "mart-9f196.appspot.com",
+  messagingSenderId: "741138338631",
+  appId: "1:741138338631:web:226ed79dd9017f6bfd3262"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app)
-const storge = getStorage();
-const db = getFirestore();
-
-//collection ref
-const colref = collection(db, 'Product')
-getDocs(colref)
-  .then((snapshot)=>{
-    console.log(snapshot.docs);
-  })
+const db = getFirestore(app);
+const storge = getStorage(app);
 
 export {auth , app , analytics, db, storge }

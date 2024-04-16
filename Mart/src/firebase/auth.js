@@ -1,5 +1,6 @@
 import { auth } from "./firebase";
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
  
 
 export const doCreateUserWithEmailPassword = async(email, password)=>{
@@ -9,7 +10,7 @@ export const doCreateUserWithEmailPassword = async(email, password)=>{
 }
 
 export const doSignInWithEmailAndPassword = (email , password) =>{
-    return doSignInWithEmailAndPassword(auth, email,password)
+    return signInWithEmailAndPassword(auth, email,password)
 }
 
 export const doSignWithGoogle = async () =>{

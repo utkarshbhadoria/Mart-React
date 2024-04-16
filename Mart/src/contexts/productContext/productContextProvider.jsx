@@ -5,6 +5,7 @@ import  ProductContext  from "./productcontext"
     const [details, setDetails] = useState(null);
     const [mode , setMode] = useState('light');
     const [value, setValue] = useState()
+    const [loading, setLoading] = useState(false)
     const toggleMode = () =>{
         if(mode === 'light'){
           setMode('dark')
@@ -20,7 +21,7 @@ import  ProductContext  from "./productcontext"
 
     return(
         <>
-        <ProductContext.Provider value={{details, setDetails , mode , toggleMode, value ,setValue}}>
+        <ProductContext.Provider value={{details, setDetails , mode , toggleMode, value ,setValue , loading , setLoading}}>
             {children}
         </ProductContext.Provider>
         </>
