@@ -1,18 +1,25 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import Layout from "../Layout";
-import {
-  doSignInWithEmailAndPassword,
-  doSignWithGoogle,
-  doSignOut,
-} from "../../../firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+import {ProductContext} from "../../../contexts/productContext/productcontext"
+import { useContext } from "react";
+import { toast } from "react-toastify";
+// import {
+//   doSignInWithEmailAndPassword,
+//   doSignWithGoogle,
+//   doSignOut,
+// } from "../../../firebase/auth";
 
- import {useAuth} from "../../../contexts/authContext"
+// import {useAuth} from "../../../contexts/authContext"
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase/firebase";
 
 export default function Signin() {
   //const {userLoggedIn} = useAuth()
+  const context = useContext(ProductContext);
+  const { loading, setLoading } = context;
+
 
   
 
@@ -20,23 +27,50 @@ export default function Signin() {
 
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+
+
+  const signin = async (e) => {
     e.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(data.email, data.password);
+    setLoading(true);
+    
+    try{
+      const user = await signInWithEmailAndPassword(auth , email , password)
+      toast.success("Logged in Successfully" , {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      localStorage.setItem('user' , JSON.stringify(user))
+      navigate('/')
+      
+    }
+    catch (error) {
+      toast.error('Sigin Failed', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      setLoading(false);
     }
   }; 
 
 
 
   return (
-    <Layout>
+    <>
       {/* {userLoggedIn && (<Navigate to={"/"} replace={true}/>)} */}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -51,7 +85,7 @@ export default function Signin() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={signin}>
             <div>
               <label
                 htmlFor="email"
@@ -65,7 +99,7 @@ export default function Signin() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  onChange={(e) => SetData({ ...data, email: e.target.value })}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -96,7 +130,7 @@ export default function Signin() {
                   type="password"
                   autoComplete="current-password"
                   onChange={(e) =>
-                    SetData({ ...data, password: e.target.value })
+                    setPassword(e.target.value)
                   }
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -125,6 +159,6 @@ export default function Signin() {
           </p>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }
