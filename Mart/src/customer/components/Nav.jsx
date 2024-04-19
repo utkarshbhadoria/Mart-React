@@ -13,23 +13,54 @@
   ```
 */
 import { Link } from 'react-router-dom'
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
+import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { Outlet } from 'react-router-dom'
+import { auth } from '../../firebase/firebase';
 
 
 
 
 export default function Navigation() {
   const [open, setOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isUser, setIsUser] = useState(false)
+  const user = JSON.parse(localStorage.getItem('user'))
+  useEffect(() => {
+    try {
+      
+      if (user.user.email === 'admin@gmail.com') {
+        setIsAdmin(true)
+      }
+      else if (user) {
+        setIsUser(true)
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+
+  }, [])
+
+  const logout = () => {
+    localStorage.clear('user');
+    auth.signOut()
+    window.location.href = '/signin'
+
+  }
+
+
+
 
   return (
-    
+
     <div className="bg-white">
       <header className="relative bg-white">
         <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          Get free delivery on orders over $100
+          DEMO
         </p>
 
         <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -58,24 +89,56 @@ export default function Navigation() {
               </div>
 
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <Link to='/signin' className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Sign in
-                  </Link>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <Link to="/signup" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Create account
-                  </Link>
-                </div>
+                { !user?
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
 
-                
+                    <Link to='/signin' className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Sign in
+                    </Link>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <Link to="/signup" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Create account
+                    </Link>
+                  </div> :
+
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-">
+                    <Link onClick={logout} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Logout
+                    </Link>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    
+                    {isAdmin? 
+                      <Link to="/dashboard" className="p-2 text-gray-400 hover:text-gray-500">
+                      <span className="sr-only"></span>
+                      <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
+                    </Link> : 
+                    <Link to="/" className="p-2 text-gray-400 hover:text-gray-500">
+                    <span className="sr-only"></span>
+                    <UserIcon className="h-6 w-6" aria-hidden="true" />
+                    </Link>
+
+                    }
+                  </div>
+
+
+                }
+
+
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
+                  <a href="#" className="p-2 text-gray-400 hover:text-gray-200">
                     <span className="sr-only">Search</span>
                     <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                   </a>
+                </div>
+
+                {/* Order */}
+                {user && !isAdmin}
+                <div className="flex lg:ml-6">
+                  <Link to={"/order"} className="p-2 text-black-400 hover:text-gray-400">
+                    Order
+                  </Link>
                 </div>
 
                 {/* Cart */}
@@ -93,12 +156,11 @@ export default function Navigation() {
             </div>
           </div>
         </nav>
-       
+
       </header>
 
-      
+
     </div>
-    
-    
+
   )
 }

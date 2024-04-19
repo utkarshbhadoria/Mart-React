@@ -20,10 +20,7 @@ function Home() {
     <div >
      
       <Layout>
-        <div className="flex">
-          <button className='bg-gray-300 p-5 m-2' onClick={()=>addCart()}>add</button><br />
-          <button className='bg-gray-300 p-5 m-2' onClick={()=>deleteCart()}>delete</button>
-        </div>
+        
        <ProductCard/>
      </Layout>
     

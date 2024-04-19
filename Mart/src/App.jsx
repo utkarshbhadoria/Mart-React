@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Outlet,
+  Navigate,
 } from "react-router-dom";
 
 import ProductContextProvider from "./contexts/productContext/productContextProvider";
@@ -32,10 +33,10 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<ProtectedRouteAdmin> <Dashboard /> </ProtectedRouteAdmin>} />
             <Route path="/productinfo/:id" element={<ProductInfo />} />
-            <Route path="/addproduct" element={<AddProduct />} />
-            <Route path="/updateproduct/:id" element={<UpdateProduct />} />
+            <Route path="/addproduct" element={<ProtectedRouteAdmin><AddProduct /></ProtectedRouteAdmin>} />
+            <Route path="/updateproduct/:id" element={<ProtectedRouteAdmin><UpdateProduct /></ProtectedRouteAdmin>} />
           </Routes>
           <ToastContainer />
         </Router>
@@ -45,3 +46,22 @@ function App() {
 }
 
 export default App;
+
+
+// protected routes - user
+const ProtectedRouteUser = ({children}) =>{
+  const user = localStorage.getItem('user');
+
+  if (user) return children;
+  else return <Navigate to ={'/signin'}/>
+}
+
+// protected routes - admin
+const ProtectedRouteAdmin = ({children}) =>{
+  const admin = JSON.parse(localStorage.getItem('user'));
+
+  if (admin.user.email ==='admin@gmail.com') return children;
+  else return <Navigate to ={'/signin'}/>
+}
+
+
