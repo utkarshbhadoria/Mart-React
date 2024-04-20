@@ -13,44 +13,48 @@
   ```
 */
 import { Link } from 'react-router-dom'
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment, useState, useEffect, useContext } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { Outlet } from 'react-router-dom'
 import { auth } from '../../firebase/firebase';
+import ProductContext from '../../contexts/productContext/productcontext';
 
 
 
 
 export default function Navigation() {
   const [open, setOpen] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isUser, setIsUser] = useState(false)
+
   const user = JSON.parse(localStorage.getItem('user'))
+  
+  const [ifUser , setIfUser] = useState(false)
+  const [ifAdmin , setIfAdmin] = useState(false)
+  const { isAdmin,isUser ,check } = useContext(ProductContext)
   useEffect(() => {
     try {
-      
-      if (user.user.email === 'admin@gmail.com') {
-        setIsAdmin(true)
-      }
-      else if (user) {
-        setIsUser(true)
-      }
-    }
-    catch (error) {
-      console.log(error);
-    }
+
+      check(user.user.email)
+      if(isAdmin) setIfAdmin(true);
+      else if(isUser) setIfUser(true);
 
 
-  }, [])
+
+
+    }
+    catch { }
+  }, []);
 
   const logout = () => {
     localStorage.clear('user');
     auth.signOut()
     window.location.href = '/signin'
 
+  
   }
+
+  console.log(isUser , isAdmin);
 
 
 
@@ -89,7 +93,7 @@ export default function Navigation() {
               </div>
 
               <div className="ml-auto flex items-center">
-                { !user?
+                {!ifUser && !ifAdmin?
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
 
                     <Link to='/signin' className="text-sm font-medium text-gray-700 hover:text-gray-800">
@@ -106,16 +110,16 @@ export default function Navigation() {
                       Logout
                     </Link>
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                    
-                    {isAdmin? 
+
+                    {ifAdmin ?
                       <Link to="/dashboard" className="p-2 text-gray-400 hover:text-gray-500">
-                      <span className="sr-only"></span>
-                      <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
-                    </Link> : 
-                    <Link to="/" className="p-2 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only"></span>
-                    <UserIcon className="h-6 w-6" aria-hidden="true" />
-                    </Link>
+                        <span className="sr-only"></span>
+                        <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
+                      </Link> :
+                      <Link to="/" className="p-2 text-gray-400 hover:text-gray-500">
+                        <span className="sr-only"></span>
+                        <UserIcon className="h-6 w-6" aria-hidden="true" />
+                      </Link>
 
                     }
                   </div>
@@ -134,7 +138,7 @@ export default function Navigation() {
                 </div>
 
                 {/* Order */}
-                {user && !isAdmin}
+                {ifUser && !ifAdmin}
                 <div className="flex lg:ml-6">
                   <Link to={"/order"} className="p-2 text-black-400 hover:text-gray-400">
                     Order

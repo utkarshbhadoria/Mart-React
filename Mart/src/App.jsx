@@ -13,7 +13,7 @@ import Checkout from "./customer/components/Checkout/Checkout";
 import Signin from "./customer/components/Signup/Signin";
 import Signup from "./customer/components/Signup/Signup";
 import Home from "./Home/Home";
-import { AuthProvider } from "./contexts/authContext";
+import { AuthProvider } from "./contexts/authContext/index";
 import ProductInfo from "./customer/components/ProductInfo/ProductInfo";
 import Dashboard from "./admin/components/Dashboard/Dashboard";
 
@@ -36,7 +36,7 @@ function App() {
             <Route path="/dashboard" element={<ProtectedRouteAdmin> <Dashboard /> </ProtectedRouteAdmin>} />
             <Route path="/productinfo/:id" element={<ProductInfo />} />
             <Route path="/addproduct" element={<ProtectedRouteAdmin><AddProduct /></ProtectedRouteAdmin>} />
-            <Route path="/updateproduct/:id" element={<ProtectedRouteAdmin><UpdateProduct /></ProtectedRouteAdmin>} />
+            <Route path="/updateproduct" element={<ProtectedRouteAdmin><UpdateProduct /></ProtectedRouteAdmin>} />
           </Routes>
           <ToastContainer />
         </Router>

@@ -7,7 +7,7 @@ import Modal from '../Modal/Modal';
 function Cart() {
 
   const context = useContext(ProductContext)
-  const { mode } = context;
+  const { mode, product } = context;
 
   return (
     <Layout >

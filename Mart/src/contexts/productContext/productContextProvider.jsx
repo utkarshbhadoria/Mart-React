@@ -1,7 +1,7 @@
 import { useState , useEffect , React } from "react";
 import  ProductContext  from "./productcontext"
 import { auth, db } from '../../firebase/firebase'
-import {  Timestamp, addDoc, collection, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import {  Timestamp, addDoc, deleteDoc,collection, onSnapshot, orderBy, query, setDoc , doc} from 'firebase/firestore';
 import { toast } from "react-toastify";
 
 
@@ -20,6 +20,24 @@ import { toast } from "react-toastify";
           document.body.style.backgroundColor = 'white'
         }
       
+      }
+
+      const [isUser , setIsUser] = useState(false);
+      const [isAdmin , setIsAdmin] = useState(false);
+    
+      async function check(email){
+    
+        try{
+          const querySnapshotadmin = await db.collection('admin').where('email' , '==' , email).get()
+          const querySnapshotuser = await db.collection('users').where('email' , '==' , email).get()
+    
+          if(!querySnapshotadmin.empty) setIsAdmin(true);
+          else if(querySnapshotadmin.empty && !querySnapshotuser.empty) setIsUser(true);
+    
+        }
+        catch{
+    
+        }
       }
       const [products, setProducts] = useState({
         title: null,
@@ -48,10 +66,11 @@ import { toast } from "react-toastify";
       setLoading(true)
       try {
         await addDoc(productRef, products)
-        toast.success("Product Add successfully");
+        toast.success("Product Added successfully");
+        console.log(products);
         setTimeout(()=>
           window.location.href='/dashboard'
-          , 3000 )
+          , 2000 )
         getProductData()
         closeModal()
         setLoading(false)
@@ -92,33 +111,55 @@ import { toast } from "react-toastify";
 
     // ----------------------------------------------------EDIT PRODUCT ---------------------------------------------------
 
-    const editProduct = async (item) => {
+    const editProduct = (item) => {
       setProducts(item)
-      
+    }
+
+    const updateProduct = async (item) => {
       setLoading(true)
       try {
-        await setDoc(doc(db , "products" , products.id) , products)
-        toast.success("Product Updated successfully");
-        setTimeout(()=>
-          window.location.href='/dashboard'
-          , 3000 )
-        getProductData()
+        await setDoc(doc(db, "products", products.id), products);
+        toast.success("Product Updated successfully")
+        getProductData();
         setLoading(false)
+        window.location.href = '/dashboard'
+
       } catch (error) {
-        console.log(error)
         setLoading(false)
+        console.log(error)
       }
       setProducts("")
     }
 
+  const deleteProduct = async(item) => {
 
-    return(
-        <>
-        <ProductContext.Provider value={{details, setDetails , mode , toggleMode, value ,setValue , loading , setLoading, products , setProducts , addProduct ,editProduct ,product}}>
-            {children}
-        </ProductContext.Provider>
-        </>
-    )
+    try {
+      
+      setLoading(true)
+      await deleteDoc(doc(db, "products", item.id));
+      toast.success('Product Deleted successfully')
+      setLoading(false)
+      getProductData()
+      
+    } catch (error) {
+      toast.error('Product Deleted Falied')
+
+      setLoading(false)
+    }
+  }
+
+
+  return(
+      <>
+      <ProductContext.Provider value={{
+        isAdmin, isUser, check , mode , toggleMode,
+         value ,setValue , loading , setLoading, products , 
+         setProducts , addProduct ,editProduct ,product ,
+          deleteProduct , updateProduct}}>
+          {children}
+      </ProductContext.Provider>
+      </>
+  )
+
 }
-
 export default ProductContextProvider
