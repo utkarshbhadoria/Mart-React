@@ -1,6 +1,7 @@
 import React from 'react'
 
 function UpdateProduct() {
+    
     return (
         <div>
             <div className=' flex justify-center items-center h-screen'>

@@ -1,7 +1,7 @@
 import { useState , useEffect , React } from "react";
 import  ProductContext  from "./productcontext"
 import { auth, db } from '../../firebase/firebase'
-import {  Timestamp, addDoc, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import {  Timestamp, addDoc, collection, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
 import { toast } from "react-toastify";
 
 
@@ -39,7 +39,7 @@ import { toast } from "react-toastify";
     
       })  
 
-    // -------------------------Add Product----------------------------------------------
+    // ------------------------------------------  -------Add Product--------------------------------------------------------
     const addProduct = async () => {
       if (products.title == null || products.price == null || products.imageUrl == null || products.category == null || products.description == null) {
         return toast.error('Please fill all fields')
@@ -48,7 +48,10 @@ import { toast } from "react-toastify";
       setLoading(true)
       try {
         await addDoc(productRef, products)
-        toast.success("Product Add successfully")
+        toast.success("Product Add successfully");
+        setTimeout(()=>
+          window.location.href='/dashboard'
+          , 3000 )
         getProductData()
         closeModal()
         setLoading(false)
@@ -58,7 +61,7 @@ import { toast } from "react-toastify";
       }
       setProducts("")
     }
-
+// -----------------------------------------------------GET PRODUCT ---------------------------------------------------------
     const [product , setProduct] = useState([]);
     const getProductData = async () => {
       setLoading(true)
@@ -87,10 +90,31 @@ import { toast } from "react-toastify";
       getProductData();
     }, []);
 
+    // ----------------------------------------------------EDIT PRODUCT ---------------------------------------------------
+
+    const editProduct = async (item) => {
+      setProducts(item)
+      
+      setLoading(true)
+      try {
+        await setDoc(doc(db , "products" , products.id) , products)
+        toast.success("Product Updated successfully");
+        setTimeout(()=>
+          window.location.href='/dashboard'
+          , 3000 )
+        getProductData()
+        setLoading(false)
+      } catch (error) {
+        console.log(error)
+        setLoading(false)
+      }
+      setProducts("")
+    }
+
 
     return(
         <>
-        <ProductContext.Provider value={{details, setDetails , mode , toggleMode, value ,setValue , loading , setLoading, products , setProducts , addProduct , product}}>
+        <ProductContext.Provider value={{details, setDetails , mode , toggleMode, value ,setValue , loading , setLoading, products , setProducts , addProduct ,editProduct ,product}}>
             {children}
         </ProductContext.Provider>
         </>
