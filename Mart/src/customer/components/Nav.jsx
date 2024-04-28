@@ -14,12 +14,16 @@
 */
 import { Link } from 'react-router-dom'
 import { Fragment, useState, useEffect, useContext } from 'react'
+import {  useSelector } from 'react-redux'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { Outlet } from 'react-router-dom'
 import { auth } from '../../firebase/firebase';
 import ProductContext from '../../contexts/productContext/productcontext';
+import { db } from '../../firebase/firebase';
+import { collection , where} from 'firebase/firestore';
+
 
 
 
@@ -27,37 +31,30 @@ import ProductContext from '../../contexts/productContext/productcontext';
 export default function Navigation() {
   const [open, setOpen] = useState(false)
 
+  const cartItems = useSelector((state)=>state.cart).length//to get num of cartItems
+
   const user = JSON.parse(localStorage.getItem('user'))
-  
-  const [ifUser , setIfUser] = useState(false)
-  const [ifAdmin , setIfAdmin] = useState(false)
+
   const { isAdmin,isUser ,check } = useContext(ProductContext)
+  
   useEffect(() => {
     try {
-
-      check(user.user.email)
-      if(isAdmin) setIfAdmin(true);
-      else if(isUser) setIfUser(true);
-
-
-
-
+      if(user){
+        check(user.user.email);
+      }
     }
     catch { }
-  }, []);
+  }, [user]);
 
   const logout = () => {
-    localStorage.clear('user');
+    localStorage.clear('user'); // Clear user data
+    
+
     auth.signOut()
     window.location.href = '/signin'
 
   
   }
-
-  console.log(isUser , isAdmin);
-
-
-
 
   return (
 
@@ -93,16 +90,13 @@ export default function Navigation() {
               </div>
 
               <div className="ml-auto flex items-center">
-                {!ifUser && !ifAdmin?
+                {!isUser && !isAdmin ?
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
 
                     <Link to='/signin' className="text-sm font-medium text-gray-700 hover:text-gray-800">
                       Sign in
                     </Link>
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                    <Link to="/signup" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                      Create account
-                    </Link>
+                    
                   </div> :
 
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-">
@@ -111,7 +105,7 @@ export default function Navigation() {
                     </Link>
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
 
-                    {ifAdmin ?
+                    {isAdmin ?
                       <Link to="/dashboard" className="p-2 text-gray-400 hover:text-gray-500">
                         <span className="sr-only"></span>
                         <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
@@ -138,12 +132,14 @@ export default function Navigation() {
                 </div>
 
                 {/* Order */}
-                {ifUser && !ifAdmin}
+                {isUser && !isAdmin?
                 <div className="flex lg:ml-6">
                   <Link to={"/order"} className="p-2 text-black-400 hover:text-gray-400">
                     Order
                   </Link>
-                </div>
+                </div> : "" }
+
+
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
@@ -152,7 +148,7 @@ export default function Navigation() {
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cartItems}</span>
                     <span className="sr-only">items in cart, view bag</span>
                   </Link>
                 </div>

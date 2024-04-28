@@ -22,6 +22,7 @@ import UpdateProduct from "./admin/components/pages/UpdateProduct";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ProductDetail from "./customer/components/ProductDetails/ProductDetail";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/productDetail" element={<ProductDetail />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />

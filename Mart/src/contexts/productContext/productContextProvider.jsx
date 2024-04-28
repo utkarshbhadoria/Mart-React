@@ -1,8 +1,9 @@
 import { useState , useEffect , React } from "react";
 import  ProductContext  from "./productcontext"
 import { auth, db } from '../../firebase/firebase'
-import {  Timestamp, addDoc, deleteDoc,collection, onSnapshot, orderBy, query, setDoc , doc} from 'firebase/firestore';
+import {  Timestamp, addDoc, getDocs,deleteDoc,collection, onSnapshot, orderBy, query, setDoc , doc} from 'firebase/firestore';
 import { toast } from "react-toastify";
+import { where } from "firebase/firestore";
 
 
  function ProductContextProvider({children}){
@@ -24,21 +25,26 @@ import { toast } from "react-toastify";
 
       const [isUser , setIsUser] = useState(false);
       const [isAdmin , setIsAdmin] = useState(false);
-    
-      async function check(email){
-    
-        try{
-          const querySnapshotadmin = await db.collection('admin').where('email' , '==' , email).get()
-          const querySnapshotuser = await db.collection('users').where('email' , '==' , email).get()
-    
-          if(!querySnapshotadmin.empty) setIsAdmin(true);
-          else if(querySnapshotadmin.empty && !querySnapshotuser.empty) setIsUser(true);
-    
+
+      const check = async (email) => {
+        try {
+            const querySnapshotAdmin = await getDocs(query(collection(db, 'admin'), where('email', '==', email)));
+            const querySnapshotUser = await getDocs(query(collection(db, 'users'), where('email', '==', email)));
+
+            console.log(querySnapshotUser);
+
+
+            if (!querySnapshotAdmin.empty) setIsAdmin(true);
+            else if (querySnapshotAdmin.empty && !querySnapshotUser.empty) setIsUser(true);
+
+        } catch (error) {
+            
+            //toast.error("");
         }
-        catch{
+    };
+      
     
-        }
-      }
+      
       const [products, setProducts] = useState({
         title: null,
         price: null,
@@ -107,6 +113,7 @@ import { toast } from "react-toastify";
   
     useEffect(() => {
       getProductData();
+      getOrderData();
     }, []);
 
     // ----------------------------------------------------EDIT PRODUCT ---------------------------------------------------
@@ -131,6 +138,8 @@ import { toast } from "react-toastify";
       setProducts("")
     }
 
+    //------------------------------------------------------DELETE PRODUCT ----------------------------------------
+
   const deleteProduct = async(item) => {
 
     try {
@@ -148,6 +157,28 @@ import { toast } from "react-toastify";
     }
   }
 
+  //------------------------------------------------------GET ORDER DATA---------------------------------
+  const [order , setOrder] = useState([])
+  const getOrderData = async() =>{
+    setLoading(true);
+    try{
+      const orderArray = [];
+    const result = await getDocs(collection(db , "orders"))
+    result.map((docs)=>{
+      orderArray.push(docs.data());
+      setLoading(false)
+    })
+    setOrder(orderArray)
+    setLoading(false)
+    }
+    catch(error){
+      toast.error(error)
+      setLoading(false)
+
+    }
+    
+
+  }
 
   return(
       <>
@@ -155,7 +186,7 @@ import { toast } from "react-toastify";
         isAdmin, isUser, check , mode , toggleMode,
          value ,setValue , loading , setLoading, products , 
          setProducts , addProduct ,editProduct ,product ,
-          deleteProduct , updateProduct}}>
+          deleteProduct , updateProduct , order}}>
           {children}
       </ProductContext.Provider>
       </>
