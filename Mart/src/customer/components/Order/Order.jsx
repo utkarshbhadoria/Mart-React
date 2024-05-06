@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import ProductContext from '../../../contexts/productContext/productcontext';
-import Layout from '../../components/layout/Layout'
-import Loader from '../../components/loader/Loader'
+import Layout from '../Layout';
+import Loader from '../Loader/Loader';
 
 function Order() {
-  const userid = JSON.parse(localStorage.getItem('currentUser')).user.uid
+  const userid = JSON.parse(localStorage.getItem('user')).user.uid
   const context = useContext(ProductContext)
   const { mode, loading, order } = context
   return (

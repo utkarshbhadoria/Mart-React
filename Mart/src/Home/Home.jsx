@@ -19,8 +19,7 @@ function Home() {
   return (
     <div >
      
-      <Layout>
-        
+      <Layout>     
        <ProductCard/>
      </Layout>
     

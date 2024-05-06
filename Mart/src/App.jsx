@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -23,8 +23,11 @@ import UpdateProduct from "./admin/components/pages/UpdateProduct";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProductDetail from "./customer/components/ProductDetails/ProductDetail";
+import ProductContext from "./contexts/productContext/productcontext";
+import Order from "./customer/components/Order/Order";
 
 function App() {
+
   return (
     <AuthProvider>
       <ProductContextProvider>
@@ -35,6 +38,7 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/order" element={<ProtectedRouteUser> <Order/> </ProtectedRouteUser>} />
             <Route path="/dashboard" element={<ProtectedRouteAdmin> <Dashboard /> </ProtectedRouteAdmin>} />
             <Route path="/productinfo/:id" element={<ProductInfo />} />
             <Route path="/addproduct" element={<ProtectedRouteAdmin><AddProduct /></ProtectedRouteAdmin>} />
@@ -53,6 +57,8 @@ export default App;
 // protected routes - user
 const ProtectedRouteUser = ({children}) =>{
   const user = localStorage.getItem('user');
+  const context  = useContext(ProductContext);
+  const { isUser} = context
 
   if (user) return children;
   else return <Navigate to ={'/signin'}/>
@@ -60,9 +66,13 @@ const ProtectedRouteUser = ({children}) =>{
 
 // protected routes - admin
 const ProtectedRouteAdmin = ({children}) =>{
-  const admin = JSON.parse(localStorage.getItem('user'));
 
-  if (admin.user.email ==='admin@gmail.com') return children;
+  const context  = useContext(ProductContext);
+  const { isAdmin} = context
+  //const admin = JSON.parse(localStorage.getItem('user'));
+
+
+  if (isAdmin) return children;
   else return <Navigate to ={'/signin'}/>
 }
 
