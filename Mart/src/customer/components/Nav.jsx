@@ -14,7 +14,7 @@
 */
 import { Link } from 'react-router-dom'
 import { Fragment, useState, useEffect, useContext } from 'react'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import { UserCircleIcon } from "@heroicons/react/20/solid";
@@ -22,7 +22,11 @@ import { Outlet } from 'react-router-dom'
 import { auth } from '../../firebase/firebase';
 import ProductContext from '../../contexts/productContext/productcontext';
 import { db } from '../../firebase/firebase';
-import { collection , where} from 'firebase/firestore';
+import { collection, where } from 'firebase/firestore';
+
+
+
+
 
 
 
@@ -31,15 +35,17 @@ import { collection , where} from 'firebase/firestore';
 export default function Navigation() {
   const [open, setOpen] = useState(false)
 
-  const cartItems = useSelector((state)=>state.cart).length//to get num of cartItems
+  const cartItems = useSelector((state) => state.cart)//to get num of cartItems
 
   const user = JSON.parse(localStorage.getItem('user'))
-
-  const { isAdmin,isUser ,check } = useContext(ProductContext)
   
+  
+
+  const { isAdmin, isUser, check } = useContext(ProductContext)
+  console.log(isAdmin);
   useEffect(() => {
     try {
-      if(user){
+      if (user) {
         check(user.user.email);
       }
     }
@@ -48,119 +54,360 @@ export default function Navigation() {
 
   const logout = () => {
     localStorage.clear('user'); // Clear user data
-    
+
 
     auth.signOut()
     window.location.href = '/signin'
 
-  
+
   }
 
   return (
+    // new Nav
+    <>
+      <div className="header-top">
+        <div className="content-margins">
+          <div className="row">
+            <div className="col-md-5 hidden-xs hidden-sm">
+              <div className="entry"><b>contact us:</b> <Link to="tel:+35235551238745">+3  (523) 555 123 8745</Link></div>
+              <div className="entry"><b>email:</b> <Link to="mailto:office@exzo.com">office@exzo.com</Link></div>
+            </div>
+            <div className="col-md-7 col-md-text-right">
+              {isAdmin || isUser ?
+                <div className="entry"><Link onClick={logout} className="open-popup" ><b>logout</b></Link></div> :
+                <div className="entry"><Link to="signin" className="open-popup" data-rel="1"><b>login</b></Link>&nbsp; or &nbsp;<Link to="signup" className="open-popup" data-rel="2"><b>register</b></Link></div>
+              }
+              <div className="entry hidden-xs hidden-sm"><Link to="#"><i className="fa fa-heart-o" aria-hidden="true"></i></Link></div>
+              {isUser ?
+                <div className="entry hidden-xs hidden-sm cart">
+                  <Link to="/cart">
+                    <span className="cart-icon">
+                      <i className="fa fa-shopping-bag" aria-hidden="true"></i>
+                      <span className="cart-label">{cartItems.length}</span>
+                    </span>
+                  </Link>
+                </div> : " "
+              }
+              {isAdmin ?
+                <div className="entry hidden-xs hidden-sm">
+                  <Link to="/dashboard" className="col-md-9 col-md-text-right">
+                    <span className="sr-only"></span>
+                    <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
+                  </Link>
+                </div> :
+                <div className="entry hidden-xs hidden-sm">
+                  <Link to="/" className="col-md-9 col-md-text-right">
+                    <span className="sr-only"></span>
+                    <UserIcon className="h-6 w-6" aria-hidden="true" />
+                  </Link>
+                </div>
 
-    <div className="bg-white">
-      <header className="relative bg-white">
-        <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-          DEMO
-        </p>
-
-        <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="border-b border-gray-200">
-            <div className="flex h-16 items-center">
-              <button
-                type="button"
-                className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
-                onClick={() => setOpen(true)}
-              >
-                <span className="absolute -inset-0.5" />
-                <span className="sr-only">Open menu</span>
-                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-              </button>
-
-              {/* Logo */}
-              <div className="ml-4 flex lg:ml-0">
-                <Link to='/'>
-                  <span className="sr-only">Your Company</span>
-                  <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    alt=""
-                  />
-                </Link>
+              }
+              <div className="hamburger-icon">
+                <span></span>
+                <span></span>
+                <span></span>
               </div>
+            </div>
 
-              <div className="ml-auto flex items-center">
-                {!isUser && !isAdmin ?
-                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+          </div>
+        </div>
+      </div>
 
-                    <Link to='/signin' className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                      Sign in
-                    </Link>
-                    
-                  </div> :
+      <div className="header-bottom">
+        <div className="content-margins">
+          <div className="row">
+            <div className="col-xs-3 col-sm-1">
+              <Link id="logo" to="index1.html"><img src="img/logo-2.png" alt="" /></Link>
+            </div>
+            <div className="col-xs-9 col-sm-11 text-right">
+              <div className="nav-wrapper">
+                <div className="nav-close-layer"></div>
+                <nav>
+                  <ul>
+                    <li className="active">
+                      <Link to={"/"}>Home</Link>
+                    </li>
+                    <li>
+                      <Link to="/about">about us</Link>
+                    </li>
+                    <li className="megamenu-wrapper">
+                      <Link to="products1.html">products</Link>
+                      <div className="menu-toggle"></div>
+                      <div className="megamenu">
+                        <div className="links">
+                          <Link className="active" to="products1.html">Products Landing 1</Link>
+                          <Link to="products2.html">Products Landing 2</Link>
+                          <Link to="products3.html">Products Landing 3</Link>
+                          <Link to="product.html">Product Detail</Link>
+                        </div>
+                        <div className="content">
+                          <div className="row nopadding">
+                            <div className="col-xs-6">
+                              <div className="product-shortcode style-5">
+                                <div className="product-label green">best price</div>
+                                <div className="icons">
+                                  <Link className="entry"><i className="fa fa-check" aria-hidden="true"></i></Link>
+                                  <Link className="entry open-popup" data-rel="3"><i className="fa fa-eye" aria-hidden="true"></i></Link>
+                                  <Link className="entry"><i className="fa fa-heart-o" aria-hidden="true"></i></Link>
+                                </div>
+                                <div className="preview">
+                                  <div className="swiper-container" data-loop="1">
+                                    <div className="swiper-button-prev style-1"></div>
+                                    <div className="swiper-button-next style-1"></div>
+                                    <div className="swiper-wrapper">
+                                      <div className="swiper-slide">
+                                        <img src="img/product-59.jpg" alt="" />
+                                      </div>
+                                      <div className="swiper-slide">
+                                        <img src="img/product-61.jpg" alt="" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="content-animate">
+                                  <div className="title">
+                                    <div className="shortcode-rate-wrapper">
+                                      <div className="rate-wrapper align-inline">
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star-o" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+                                    <div className="h6 animate-to-green"><Link to="product.html">modern beat nine</Link></div>
+                                  </div>
+                                  <div className="description">
+                                    <div className="simple-article text size-2">Mollis nec consequat at In feugiat molestie tortor Link malesuada</div>
+                                  </div>
+                                  <div className="price">
+                                    <div className="simple-article size-4 dark">$630.00</div>
+                                  </div>
+                                </div>
+                                <div className="preview-buttons">
+                                  <div className="buttons-wrapper">
+                                    <Link className="button size-2 style-2" to="product.html">
+                                      <span className="button-wrapper">
+                                        <span className="icon"><img src="img/icon-1.png" alt=""/></span>
+                                        <span className="text">Learn More</span>
+                                      </span>
+                                    </Link>
+                                    <Link className="button size-2 style-3" to="#">
+                                      <span className="button-wrapper">
+                                        <span className="icon"><img src="img/icon-3.png" alt=""/></span>
+                                        <span className="text">Add To Cart</span>
+                                      </span>
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-xs-6">
+                              <div className="product-shortcode style-5">
+                                <div className="product-label green">best price</div>
+                                <div className="icons">
+                                  <Link className="entry"><i className="fa fa-check" aria-hidden="true"></i></Link>
+                                  <Link className="entry open-popup" data-rel="3"><i className="fa fa-eye" aria-hidden="true"></i></Link>
+                                  <Link className="entry"><i className="fa fa-heart-o" aria-hidden="true"></i></Link>
+                                </div>
+                                <div className="preview">
+                                  <div className="swiper-container" data-loop="1">
+                                    <div className="swiper-button-prev style-1"></div>
+                                    <div className="swiper-button-next style-1"></div>
+                                    <div className="swiper-wrapper">
+                                      <div className="swiper-slide">
+                                        <img src="img/product-60.jpg" alt="" />
+                                      </div>
+                                      <div className="swiper-slide">
+                                        <img src="img/product-61.jpg" alt="" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="content-animate">
+                                  <div className="title">
+                                    <div className="shortcode-rate-wrapper">
+                                      <div className="rate-wrapper align-inline">
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star-o" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+                                    <div className="h6 animate-to-green"><Link to="product.html">modern beat nine</Link></div>
+                                  </div>
+                                  <div className="description">
+                                    <div className="simple-article text size-2">Mollis nec consequat at In feugiat molestie tortor Link malesuada</div>
+                                  </div>
+                                  <div className="price">
+                                    <div className="simple-article size-4 dark">$630.00</div>
+                                  </div>
+                                </div>
+                                <div className="preview-buttons">
+                                  <div className="buttons-wrapper">
+                                    <Link className="button size-2 style-2" to="product.html">
+                                      <span className="button-wrapper">
+                                        <span className="icon"><img src="img/icon-1.png" alt=""/></span>
+                                        <span className="text">Learn More</span>
+                                      </span>
+                                    </Link>
+                                    <Link className="button size-2 style-3" to="#">
+                                      <span className="button-wrapper">
+                                        <span className="icon"><img src="img/icon-3.png" alt=""/></span>
+                                        <span className="text">Add To Cart</span>
+                                      </span>
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <Link to="services1.html">Services</Link>
+                    </li>
+                    <li>
+                      <Link to="gallery1.html">gallery</Link>
+                    </li>
+                    <li className="megamenu-wrapper">
+                      <Link to="#">Pages</Link>
+                      <div className="menu-toggle"></div>
+                      <div className="megamenu">
+                        <div className="links">
+                          <Link className="active" to="checkout1.html">Checkout 1</Link>
+                          <Link to="checkout2.html">Checkout 2</Link>
+                          <Link to="cart.html">Cart</Link>
+                          <Link to="elements.html">Elements</Link>
+                        </div>
+                        <div className="content">
+                          <div className="row nopadding">
+                            <div className="col-xs-6">
+                              <div className="product-shortcode style-5">
+                                <div className="product-label green">best price</div>
+                                <div className="icons">
+                                  <Link className="entry"><i className="fa fa-check" aria-hidden="true"></i></Link>
+                                  <Link className="entry open-popup" data-rel="3"><i className="fa fa-eye" aria-hidden="true"></i></Link>
+                                  <Link className="entry"><i className="fa fa-heart-o" aria-hidden="true"></i></Link>
+                                </div>
+                                <div className="preview">
+                                  <div className="swiper-container" data-loop="1">
+                                    <div className="swiper-button-prev style-1"></div>
+                                    <div className="swiper-button-next style-1"></div>
+                                    <div className="swiper-wrapper">
+                                      <div className="swiper-slide">
+                                        <img src="img/product-61.jpg" alt="" />
+                                      </div>
+                                      <div className="swiper-slide">
+                                        <img src="img/product-59.jpg" alt="" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="content-animate">
+                                  <div className="title">
+                                    <div className="shortcode-rate-wrapper">
+                                      <div className="rate-wrapper align-inline">
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star" aria-hidden="true"></i>
+                                        <i className="fa fa-star-o" aria-hidden="true"></i>
+                                      </div>
+                                    </div>
+                                    <div className="h6 animate-to-green"><Link to="product.html">modern beat nine</Link></div>
+                                  </div>
+                                  <div className="description">
+                                    <div className="simple-article text size-2">Mollis nec consequat at In feugiat molestie tortor Link malesuada</div>
+                                  </div>
+                                  <div className="price">
+                                    <div className="simple-article size-4 dark">$630.00</div>
+                                  </div>
+                                </div>
+                                <div className="preview-buttons">
+                                  <div className="buttons-wrapper">
+                                    <Link className="button size-2 style-2" to="product.html">
+                                      <span className="button-wrapper">
+                                        <span className="icon"><img src="img/icon-1.png" alt=""/></span>
+                                        <span className="text">Learn More</span>
+                                      </span>
+                                    </Link>
+                                    <Link className="button size-2 style-3" to="#">
+                                      <span className="button-wrapper">
+                                        <span className="icon"><img src="img/icon-3.png" alt=""/></span>
+                                        <span className="text">Add To Cart</span>
+                                      </span>
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-xs-6">
+                              <div className="banner-shortcode style-3 rounded-image text-center">
+                                <div className="valign-middle-cell">
+                                  <div className="valign-middle-content">
+                                    <div className="simple-article size-5 light transparent uppercase col-xs-b5"><span className="color">30%</span>DISCOUNT</div>
+                                    <h3 className="h3 light col-xs-b15">all models from relax seriece</h3>
+                                    <div className="simple-article size-3 light transparent col-xs-b30">Vivamus in tempor eros. Phasellus rhoncus in nunc sit amet mattis. Integer in ipsum vestibulum, molestie arcu ac</div>
+                                    <Link className="button size-2 style-1" to="#">
+                                      <span className="button-wrapper">
+                                        <span className="icon"><img src="img/icon-1.png" alt=""/></span>
+                                        <span className="text">learn more</span>
+                                      </span>
+                                    </Link>
 
-                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-">
-                    <Link onClick={logout} className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                      Logout
-                    </Link>
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-
-                    {isAdmin ?
-                      <Link to="/dashboard" className="p-2 text-gray-400 hover:text-gray-500">
-                        <span className="sr-only"></span>
-                        <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
-                      </Link> :
-                      <Link to="/" className="p-2 text-gray-400 hover:text-gray-500">
-                        <span className="sr-only"></span>
-                        <UserIcon className="h-6 w-6" aria-hidden="true" />
-                      </Link>
-
-                    }
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li><Link to="contact1.html">contact</Link></li>
+                  </ul>
+                  <div className="navigation-title">
+                    Navigation
+                    <div className="hamburger-icon active">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
                   </div>
-
-
-                }
-
-
-
-                {/* Search */}
-                <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-200">
-                    <span className="sr-only">Search</span>
-                    <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
-                  </a>
-                </div>
-
-                {/* Order */}
-                {isUser && !isAdmin?
-                <div className="flex lg:ml-6">
-                  <Link to={"/order"} className="p-2 text-black-400 hover:text-gray-400">
-                    Order
-                  </Link>
-                </div> : "" }
-
-
-
-                {/* Cart */}
-                <div className="ml-4 flow-root lg:ml-6">
-                  <Link to="/cart" className="group -m-2 flex items-center p-2">
-                    <ShoppingBagIcon
-                      className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{cartItems}</span>
-                    <span className="sr-only">items in cart, view bag</span>
-                  </Link>
-                </div>
+                </nav>
+              </div>
+              <div className="header-bottom-icon toggle-search"><i className="fa fa-search" aria-hidden="true"></i></div>
+              <div className="header-bottom-icon visible-rd"><i className="fa fa-heart-o" aria-hidden="true"></i></div>
+              <div className="header-bottom-icon visible-rd">
+                <i className="fa fa-shopping-bag" aria-hidden="true"></i>
+                <span className="cart-label">550</span>
               </div>
             </div>
           </div>
-        </nav>
-
-      </header>
-
-
-    </div>
+          <div className="header-search-wrapper">
+            <div className="header-search-content">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+                    <form>
+                      <div className="search-submit">
+                        <i className="fa fa-search" aria-hidden="true"></i>
+                        <input type="submit" />
+                      </div>
+                      <input className="simple-input style-1" type="text" value="" placeholder="Enter keyword" />
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div className="button-close"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
 
   )
 }

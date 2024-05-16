@@ -1,9 +1,11 @@
 import { useState , useEffect , React } from "react";
 import  ProductContext  from "./productcontext"
-import { auth, db } from '../../firebase/firebase'
+import { auth, db , storage } from '../../firebase/firebase'
 import {  Timestamp, addDoc, getDocs,deleteDoc,collection, onSnapshot, orderBy, query, setDoc , doc} from 'firebase/firestore';
 import { toast } from "react-toastify";
 import { where } from "firebase/firestore";
+import { getDownloadURL,listAll, ref , uploadBytes} from 'firebase/storage'
+import { FaLaptopHouse } from "react-icons/fa";
 
 
  function ProductContextProvider({children}){
@@ -23,8 +25,23 @@ import { where } from "firebase/firestore";
       
       }
 
+      const user = JSON.parse(localStorage.getItem('user'))
+      
+      
+
       const [isUser , setIsUser] = useState(false);
       const [isAdmin , setIsAdmin] = useState(false);
+
+      useEffect(() => {
+        if(user){
+          check(user.user.email)
+
+        }
+        
+      
+        
+      }, [user])
+      
 
       const check = async (email) => {
         try {
@@ -48,6 +65,7 @@ import { where } from "firebase/firestore";
       const [products, setProducts] = useState({
         title: null,
         price: null,
+        imagetitle: null,
         imageUrl: null,
         category: null,
         description: null,
@@ -63,20 +81,25 @@ import { where } from "firebase/firestore";
     
       })  
 
+
+
     // ------------------------------------------  -------Add Product--------------------------------------------------------
     const addProduct = async () => {
-      if (products.title == null || products.price == null || products.imageUrl == null || products.category == null || products.description == null) {
+      if (products.title == null || products.price == null ||  products.category == null || products.description == null ) {
         return toast.error('Please fill all fields')
       }
       const productRef = collection(db, "products")
+      
+      
       setLoading(true)
       try {
         await addDoc(productRef, products)
+        
         toast.success("Product Added successfully");
         console.log(products);
-        setTimeout(()=>
-          window.location.href='/dashboard'
-          , 2000 )
+       setTimeout(()=>
+         window.location.href='/dashboard'
+         , 2000 )
         getProductData()
         closeModal()
         setLoading(false)
@@ -110,10 +133,15 @@ import { where } from "firebase/firestore";
         setLoading(false)
       }
     }
+
+   
+    
+   
   
     useEffect(() => {
       getProductData();
       getOrderData();
+      
     }, []);
 
     // ----------------------------------------------------EDIT PRODUCT ---------------------------------------------------

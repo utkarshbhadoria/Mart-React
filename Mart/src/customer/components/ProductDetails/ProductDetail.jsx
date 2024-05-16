@@ -5,7 +5,7 @@ const ProductDetail = () => {
     <div className="container mx-auto">
       <div className="flex flex-wrap -mx-3">
         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-          <div className="h-64 md:h-auto md:w-full flex items-center bg-cover rounded-t" style={{ backgroundImage: `url('path/to/tiered/images/pri/women/clothing/basic/tee.jpg')` }}>
+          <div className="h-64 md:h-auto md:w-full flex items-center bg-cover rounded-t" style={{ backgroundImage: '../../../img/background-1.jpg' }}>
             <h2 className="text-2xl font-bold text-center text-white tracking-wide uppercase">Basic Tee</h2>
           </div>
           <div className="p-8 rounded-b">
