@@ -33,7 +33,7 @@ function ProductCard() {
     }, [])
 
     const renderProductCard = (item) => {
-        const { title, price, description, imageUrl } = item
+        const { title, price, description, imageUrl , category } = item
         return (
             <div key={item.id} className="p-4 md:w-1/2 lg:w-1/3 drop-shadow-lg">
                 <div className="h-full border-2 hover:shadow-gray-100 hover:shadow-2xl transition-shadow duration-300 ease-in-out border-gray-200 border-opacity-60 rounded-2xl overflow-hidden object-cover" style={{ backgroundColor: mode === 'dark' ? 'rgb(46 49 55)' : '', color: mode === 'dark' ? 'white' : '' }}>
@@ -73,7 +73,9 @@ function ProductCard() {
                     <div className="md:w-1/2 px-5 md:pr-8 mb-6 md:mb-0">
                         <h2 className="sm:text-2xl text-xl font-medium title-font mb-2 text-gray-900" style={{ color: mode === 'dark' ? 'white' : '' }}>Latest Blog Post</h2>
                         <p className="leading-relaxed text-base">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil vel, ut, accusamus numquam itaque cum temporibus sapiente, odit animi amet culpa nulla dolorem? Voluptatibus optio commodi hic, quod nam amet dolore ipsum adipisci maxime, voluptatem tempora, facilis vel corporis explicabo provident labore aliquid quas. Architecto asperiores corporis obcaecati quisquam laudantium, delectus nisi saepe, quam rem ratione corrupti iste perferendis reiciendis ab! Facilis commodi iure nam veritatis aut obcaecati aperiam hic molestias, recusandae nemo fuga, ex repellendus adipisci esse ratione accusamus! Inventore beatae molestias voluptatem nam eius provident reprehenderit sunt, itaque corporis magni. Laboriosam repellat quod consequuntur fuga architecto esse similique?</p>
-                        <button className="mt-4 text-blue-500 hover:underline focus:outline-none">View more</button>
+                        
+                        <button className="mt-4 text-blue-500 hover:underline focus:outline-none" onClick={()=> navigate(`/products/${"1"}`)}>View more</button>
+                          
                     </div>
                     <div className="md:w-1/2 w-full flex flex-wrap">
                         {product && product.slice(0, 3).map(item => renderProductCard(item))}
@@ -92,7 +94,9 @@ function ProductCard() {
                     <div className="md:w-1/2 px-5 order-1 md:order-2">
                         <h2 className="sm:text-2xl text-xl font-medium title-font mb-2 text-gray-900" style={{ color: mode === 'dark' ? 'white' : '' }}>Another Blog Post</h2>
                         <p className="leading-relaxed text-base">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perferendis quae ducimus, obcaecati quam nulla vel modi voluptatum fugiat similique odit rem vitae nihil quibusdam impedit esse aperiam autem et voluptates consectetur, saepe repellat blanditiis excepturi voluptate architecto! Expedita quasi facere enim. Tempora est beatae facere distinctio magnam eaque quod rerum ipsa ea, placeat error consequuntur adipisci expedita labore, deserunt tempore possimus, magni aperiam debitis voluptatum dignissimos quasi? Officia ut sequi aperiam. Provident illo harum doloribus quas magni quos odit at sint tempore? Debitis blanditiis ullam architecto officia. Impedit explicabo nulla dolores, quos saepe exercitationem amet et voluptates autem ipsum deleniti?</p>
-                        <button className="mt-4 text-blue-500 hover:underline focus:outline-none">View more</button>
+                        
+                        <button className="mt-4 text-blue-500 hover:underline focus:outline-none" onClick={()=> navigate(`/products/${"2"}`)}>View more</button>
+                            
                     </div>
                 </div>
             </div>
@@ -103,7 +107,9 @@ function ProductCard() {
                     <div className="md:w-1/2 px-5 md:pr-8 mb-6 md:mb-0">
                         <h2 className="sm:text-2xl text-xl font-medium title-font mb-2 text-gray-900" style={{ color: mode === 'dark' ? 'white' : '' }}>Latest Blog Post</h2>
                         <p className="leading-relaxed text-base">Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero explicabo delectus cupiditate unde tempore! Pariatur aspernatur molestiae mollitia fugiat ipsam minus temporibus? Totam enim quibusdam esse dolores repellendus nisi inventore quidem ut amet repudiandae alias deleniti ipsa distinctio neque voluptatibus, doloribus ullam eligendi id facere fugit? Perspiciatis facere, debitis quisquam est exercitationem veniam? Sunt voluptatibus, aspernatur esse repellendus, assumenda porro delectus nesciunt pariatur laudantium quis magnam iste, beatae modi earum! Tempora deserunt iure veniam? Voluptas, similique perferendis. Nobis accusamus ad eligendi, laborum labore id, magnam maiores asperiores rerum accusantium neque iste nostrum minima, commodi delectus? Qui eum nesciunt ea non?</p>
-                        <button className="mt-4 text-blue-500 hover:underline focus:outline-none">View more</button>
+                        
+                        <button className="mt-4 text-blue-500 hover:underline focus:outline-none" onClick={()=> navigate(`/products/${"3"}`)}>View more</button>
+                           
                     </div>
                     <div className="md:w-1/2 w-full flex flex-wrap">
                         {product && product.slice(4, 6).map(item => renderProductCard(item))}
