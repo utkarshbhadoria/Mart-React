@@ -132,7 +132,7 @@ export default function Navigation() {
                       <Link to="/about">about us</Link>
                     </li>
                     <li className="megamenu-wrapper">
-                      <Link to="products1.html">products</Link>
+                      <Link to="products">products</Link>
                       <div className="menu-toggle"></div>
                       <div className="megamenu">
                         <div className="links">

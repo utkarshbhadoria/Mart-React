@@ -26,6 +26,7 @@ import ProductDetail from "./customer/components/ProductDetails/ProductDetail";
 import ProductContext from "./contexts/productContext/productcontext";
 import Order from "./customer/components/Order/Order";
 import AboutUs from "./customer/components/Aboutus/AboutUs";
+import ProductList from "./customer/components/ProductList/ProductList";
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/productDetail/:id" element={<ProductDetail />} />
+            <Route path="/products/:category?" element={<ProductList />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />
