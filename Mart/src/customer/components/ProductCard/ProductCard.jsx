@@ -76,7 +76,7 @@ function ProductCard() {
                         <button className="mt-4 text-blue-500 hover:underline focus:outline-none">View more</button>
                     </div>
                     <div className="md:w-1/2 w-full flex flex-wrap">
-                        {product && product.slice(0, 2).map(item => renderProductCard(item))}
+                        {product && product.slice(0, 3).map(item => renderProductCard(item))}
                     </div>
                 </div>
             </div>
